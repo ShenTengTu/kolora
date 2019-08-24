@@ -1,5 +1,7 @@
 __all__ = ['color_256_xtrem']
 
+import re
+
 class _Color_Map():
     def __init__(self):
         self.__kv = {}
@@ -100,3 +102,46 @@ def color_256_xtrem(s):
         # item[0] is xtrem, item[1] is corresponding color name or hex code
         return item[0]
     return None
+
+class Kolora():
+
+    @staticmethod
+    def validate_color_value(obj):
+        '''
+        `obj` must be color name string, hex color code string or tuple `(r, g, b)`.
+
+        Return the valid formatted value of one of above.
+        '''
+        t = type(obj)
+        tl = [str, tuple]
+
+        if t not in tl:  # type check
+            raise TypeError(
+                '`obj` must be color name string, hex color code string or tuple `(r, g, b)`')
+
+        if t is tl[0]:  # if is string
+
+            if not str(obj).startswith('#'):  # if is color name
+                return obj
+
+            regex = r"^#([a-f0-9]{6}|[a-f0-9]{3})$"  # if is hex color code
+            re_groups = re.findall(regex, obj.lower())
+
+            if len(re_groups) < 1:  # formate check
+                raise ValueError('hex color code must be like `#f0f` or `#ff00ff`')
+            hex_str = re_groups[0]  # hex digits
+            if len(hex_str) == 3:  # if is shorthand, extend it
+                hex_str = hex_str[0]*2 + hex_str[1]*2 + hex_str[2]*2
+            hex_str = '#' + hex_str
+            return hex_str
+
+        if t is tl[1]:  # if is tuple
+
+            if len(obj) != 3:  # must contain 3 element
+                ValueError('tuple `(r, g, b)` must contain 3 element')
+            rgb = tuple([int(x) % 256 for x in obj])  # rgb 0~255 integers
+            return rgb
+
+    def __init__(self):
+        self.__str = ''
+    
