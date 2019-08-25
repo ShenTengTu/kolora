@@ -42,3 +42,13 @@ except ValueError as err:
 
 assert Kolora.validate_color_value(('123', '456', '789')) == (123, 200, 21)
 print('[✔] tuple `(r, g, b)` 0~255 integers')
+
+##--
+
+print('\n## Kolora.sgr_escape()')
+# 8 bit frontground color #ff0000
+assert Kolora.sgr_escape(38, 5, 9) == "\x1b[38;5;9m"
+print('[✔] 8 bit frontground color')
+# ISO-8613-3 24 bit background color #89abcd rgb(137, 171, 205)
+assert Kolora.sgr_escape(48, 2, *(137, 171, 205)) == "\x1b[48;2;137;171;205m"
+print('[✔] ISO-8613-3 24 bit background color')

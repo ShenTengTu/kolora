@@ -106,6 +106,16 @@ def color_256_xtrem(s):
 class Kolora():
 
     @staticmethod
+    def sgr_escape(*args):
+        '''
+        Make SGR (Select Graphic Rendition) escape code.
+
+        Posiotional arguments are SGR parameters.
+        '''
+        params = ';'.join(map(str, args))
+        return f"\x1b[{params}m"
+
+    @staticmethod
     def validate_color_value(obj):
         '''
         `obj` must be color name string, hex color code string or tuple `(r, g, b)`.
