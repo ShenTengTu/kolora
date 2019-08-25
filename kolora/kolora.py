@@ -210,6 +210,12 @@ class Kolora():
         self.__str += text
         return self
     
+    def f(self, text: str, deep=8, fg=..., bg=..., reset=False):
+        '''
+        Make colored text.
+        '''
+        return self.__call__(text, deep, fg, bg, reset)
+
     @property
     def text(self):
         '''

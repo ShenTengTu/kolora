@@ -113,20 +113,21 @@ assert txt == ('\x1b[38;2;0;255;255m\x1b[48;2;215;135;255m' + s + '\x1b[0m')
 print('[✔] 24bit rgb tuple')
 
 s = 'Chain'
-txt = Kolora()(
-    s[0],
-    bg='Maroon'
-    )(
-        s[1],
-        bg='Green'
-    )(
-        s[2], # still Green
-    )(
-        s[3],
-        reset= True # reset in chain
-    )(
-        s[4],
-        bg='Olive'
-    ).text
+txt = Kolora()\
+(s[0], bg='Maroon')\
+(s[1],bg='Green')\
+(s[2])\
+(s[3], reset= True)\
+(s[4], bg='Olive').text
 assert txt == ('\x1b[48;5;1m' + s[0] + '\x1b[48;5;2m' + s[1:3] + '\x1b[0m' + s[3] + '\x1b[48;5;3m'+ s[4] + '\x1b[0m')
-print('[✔] invoke chaining & reset color in chain')
+print('[✔] __call__ chaining (function) & reset color in chain')
+
+s = 'Chain'
+txt = Kolora()\
+.f(s[0], bg='Maroon')\
+.f(s[1],bg='Green')\
+.f(s[2])\
+.f(s[3], reset= True)\
+.f(s[4], bg='Olive').text
+assert txt == ('\x1b[48;5;1m' + s[0] + '\x1b[48;5;2m' + s[1:3] + '\x1b[0m' + s[3] + '\x1b[48;5;3m'+ s[4] + '\x1b[0m')
+print('[✔] method chaining (dot notation) & reset color in chain')
