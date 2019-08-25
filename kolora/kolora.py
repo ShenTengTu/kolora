@@ -4,23 +4,27 @@ import re
 
 class _Color_Map():
     def __init__(self):
-        self.__kv = {}
-        self.__vk = {}
+        self.__kv = []
     
     def __call__(self, **kwargs):
         i = 0
         for k in kwargs:
             v = kwargs[k]
-            self.__kv[k] = (i, v)
-            self.__vk[v] = (i, k)
+            self.__kv.append((i, k, v))
             i += 1
         return self
     
     def name(self, v, default=None):
-        return self.__vk.get(v, default)
+        for i, k, _v in self.__kv:
+            if v == _v:
+                return (i, k)
+        return default
 
     def hex(self, k, default=None):
-        return self.__kv.get(k, default)
+        for i, _k, v in self.__kv:
+            if k == _k:
+                return (i, v)
+        return default
 
 # referance : https://jonasjacek.github.io/colors/
 # use `_n` suffix (n is digit) to separate duplicate color name
