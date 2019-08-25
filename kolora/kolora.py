@@ -1,4 +1,4 @@
-__all__ = ['color_256_xtrem']
+__all__ = ['color_256_xtrem', 'hex_to_rgb', 'rgb_to_hex']
 
 import re
 
@@ -107,10 +107,38 @@ def color_256_xtrem(s):
         return item[0]
     return None
 
+def hex_to_rgb(hex_str: str) -> tuple:
+    '''
+    Hex color code to RGB tuple
+
+    Hex color code must use full format as '#89abcd'.
+    '''
+    digits = hex_str[1:]
+    return (int(digits[0:2], 16), int(digits[2:4], 16), int(digits[4:6], 16))
+
+def rgb_to_hex(rgb) -> str:
+  '''
+  RGB to hex color code.
+
+  Argument must be iterable.
+  '''
+  return '#' + ''.join(map(lambda n: f'{n % 256:0>2x}', rgb[0:3]))
+
 class Kolora():
 
+    __color_deep = {
+        '8': 5,
+        '24': 2
+    }
+    __color_side = {
+        'fg': 38,
+        'bg': 48
+    }
+
+    __RESET = '\x1b[0m'
+
     @staticmethod
-    def sgr_escape(*args):
+    def sgr_escape(*args) -> str:
         '''
         Make SGR (Select Graphic Rendition) escape code.
 
@@ -159,3 +187,57 @@ class Kolora():
     def __init__(self):
         self.__str = ''
     
+    def __call__(self, text: str, deep=8, fg=..., bg=..., reset=False):
+        '''
+        Make colored text.
+        '''
+        if reset:
+            self.__str += self.__RESET
+
+        _deep = self.__color_deep.get(str(deep), 5)
+        
+        if fg != ... :
+            fg_codes = self.__get_codes(fg, _deep)
+            if fg_codes != ... :
+                fg_sgr = self.sgr_escape(self.__color_side['fg'], _deep, *fg_codes)
+                self.__str += fg_sgr
+        if bg != ... :
+            bg_codes = self.__get_codes(bg, _deep)
+            if bg_codes != ... :
+                bg_sgr = self.sgr_escape(self.__color_side['bg'], _deep, *bg_codes)
+                self.__str += bg_sgr
+        
+        self.__str += text
+        return self
+    
+    @property
+    def text(self):
+        '''
+        Colored text
+        '''
+        return (self.__str + self.__RESET)
+
+    def __get_codes(self, v, deep :int) -> tuple:
+        # validate
+        color_value = self.validate_color_value(v)
+
+        if deep == 5: # 8 bits color
+            xtrem = ...
+            if type(color_value) is str: # color name or hex code
+                xtrem = color_256_xtrem(color_value)
+            elif type(color_value) is tuple: # rgb tuple
+                hex_code = rgb_to_hex(color_value)
+                xtrem = color_256_xtrem(hex_code)
+            # temp return white xtrem code if not found
+            return (xtrem,) if xtrem is not None else (15,)
+        if deep == 2: # 24 bits color
+            rgb = ...
+            if type(color_value) is str: # color name or hex code
+                regex = r'^#[a-f0-9]{6}$'
+                m = re.match(regex, color_value)
+                if m is not None: # hex code
+                    rgb = hex_to_rgb(color_value)
+            elif type(color_value) is tuple: # rgb tuple
+                rgb = color_value
+            return rgb
+            
