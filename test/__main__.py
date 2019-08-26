@@ -1,6 +1,11 @@
-from kolora import color_256_xtrem, hex_to_rgb, rgb_to_hex
+from kolora import is_hex_color_code, color_256_xtrem, hex_to_rgb, rgb_to_hex
 
 print('\n## Functions')
+assert is_hex_color_code('#5f5fff') == True
+assert is_hex_color_code('#f0f') == False
+assert is_hex_color_code('Silver') == False
+print('[✔] function is_hex_color_code()')
+
 xtrem = color_256_xtrem('Silver')
 assert xtrem == color_256_xtrem('#c0c0c0')
 assert xtrem == 7
@@ -16,7 +21,7 @@ print('[✔] function rgb_to_hex()')
 
 ##---
 
-from kolora.kolora import Kolora
+from kolora import Kolora
 
 print('\n## Kolora.validate_color_value()')
 try:
@@ -87,15 +92,13 @@ print('[✔] 8bit color name (not in mapping)')
 
 s = "fg='#00fffe', bg='#d787fe'"
 txt = Kolora()(s, fg='#00fffe', bg='#d787fe').text
-# temp return white xtrem code if not found
-assert txt == ('\x1b[38;5;15m\x1b[48;5;15m' + s + '\x1b[0m')
-print('[✔] 8bit hex code (not in mapping)')
+assert txt == ('\x1b[38;5;14m\x1b[48;5;177m' + s + '\x1b[0m')
+print('[✔] 8bit hex code (not in mapping, get the nearst)')
 
-s = "fg=(1, 255, 255), bg=(216, 135, 255)"
-txt = Kolora()(s, fg=(1, 255, 255), bg=(216, 135, 255)).text
-# temp return white xtrem code if not found
-assert txt == ('\x1b[38;5;15m\x1b[48;5;15m' + s + '\x1b[0m')
-print('[✔] 8bit rgb tuple (in mapping)')
+s = "fg=(0, 255, 254), bg=(215, 135, 254)"
+txt = Kolora()(s, fg=(0, 255, 254), bg=(215, 135, 254)).text
+assert txt == ('\x1b[38;5;14m\x1b[48;5;177m' + s + '\x1b[0m')
+print('[✔] 8bit rgb tuple (not in mapping, get the nearst)')
 
 s = "deep=24, fg='Aqua', bg='Violet'"
 txt = Kolora()(s, deep=24, fg='Aqua', bg='Violet').text

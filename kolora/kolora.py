@@ -1,4 +1,4 @@
-__all__ = ['color_256_xtrem', 'hex_to_rgb', 'rgb_to_hex']
+__all__ = ['color_256_xtrem', 'is_hex_color_code', 'hex_to_rgb', 'rgb_to_hex', 'Kolora']
 
 import re
 
@@ -14,17 +14,20 @@ class _Color_Map():
             i += 1
         return self
     
-    def name(self, v, default=None):
+    def get_name(self, v, default=None):
         for i, k, _v in self.__kv:
             if v == _v:
                 return (i, k)
         return default
 
-    def hex(self, k, default=None):
+    def get_hex(self, k, default=None):
         for i, _k, v in self.__kv:
             if k == _k:
                 return (i, v)
         return default
+    
+    def __iter__(self):
+        return iter(self.__kv)
 
 # referance : https://jonasjacek.github.io/colors/
 # use `_n` suffix (n is digit) to separate duplicate color name
@@ -98,14 +101,40 @@ _COLOR256 = _Color_Map()(
 def color_256_xtrem(s):
     '''
     Get the xtrem number of 256 colors. Return `None` if not found.
+
+    If not in 256 color map, it would try to get the nearst color in the map.
+    Otherwise, return `None`.
     '''
-    item = _COLOR256.name(s)
-    if item is None:
-        item = _COLOR256.hex(s)
+    item = None
+    if not is_hex_color_code(s):
+        item = _COLOR256.get_hex(s) # get hex
+    else:
+        item = _COLOR256.get_name(s) # get name
+        if item is None: # try to get the nearst in 256 color map
+            # caculate color difference
+            diff = lambda rgb1, rgb2: (rgb2[0]-rgb1[0])**2 + (rgb2[1]-rgb1[1])**2 + (rgb2[2]-rgb1[2])**2
+            rgb_in = hex_to_rgb(s)
+            min_d = (0xffffff)**2
+            # get min color difference
+            for xtrem, _, hex_code in _COLOR256:
+                rgb_x = hex_to_rgb(hex_code)
+                d = diff(rgb_x, rgb_in)
+                if d < min_d:
+                    min_d = d
+                    item = (xtrem,)
+
     if type(item) is tuple:
         # item[0] is xtrem, item[1] is corresponding color name or hex code
         return item[0]
     return None
+
+def is_hex_color_code(s :str):
+    '''
+    Check is full hex color code string or not
+    '''
+    regex = r'^#[a-f0-9]{6}$'
+    m = re.match(regex, s)
+    return (m is not None)
 
 def hex_to_rgb(hex_str: str) -> tuple:
     '''
@@ -239,9 +268,7 @@ class Kolora():
         if deep == 2: # 24 bits color
             rgb = ...
             if type(color_value) is str: # color name or hex code
-                regex = r'^#[a-f0-9]{6}$'
-                m = re.match(regex, color_value)
-                if m is not None: # hex code
+                if is_hex_color_code(color_value): # hex code
                     rgb = hex_to_rgb(color_value)
             elif type(color_value) is tuple: # rgb tuple
                 rgb = color_value
