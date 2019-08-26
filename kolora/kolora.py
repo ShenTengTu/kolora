@@ -187,7 +187,7 @@ class Kolora():
     def __init__(self):
         self.__str = ''
     
-    def __call__(self, text: str, deep=8, fg=..., bg=..., reset=False):
+    def __call__(self, text='', deep=8, fg=..., bg=..., reset=False):
         '''
         Make colored text.
         '''
@@ -210,7 +210,7 @@ class Kolora():
         self.__str += text
         return self
     
-    def f(self, text: str, deep=8, fg=..., bg=..., reset=False):
+    def f(self, text='', deep=8, fg=..., bg=..., reset=False):
         '''
         Make colored text.
         '''

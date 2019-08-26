@@ -131,3 +131,13 @@ txt = Kolora()\
 .f(s[4], bg='Olive').text
 assert txt == ('\x1b[48;5;1m' + s[0] + '\x1b[48;5;2m' + s[1:3] + '\x1b[0m' + s[3] + '\x1b[48;5;3m'+ s[4] + '\x1b[0m')
 print('[✔] method chaining (dot notation) & reset color in chain')
+
+s = 'Chain'
+txt = Kolora()\
+.f( bg='Maroon')(s[0])\
+.f(bg='Green')(s[1])\
+(s[2])\
+.f(reset= True)(s[3])\
+.f(bg='Olive')(s[4]).text
+assert txt == ('\x1b[48;5;1m' + s[0] + '\x1b[48;5;2m' + s[1:3] + '\x1b[0m' + s[3] + '\x1b[48;5;3m'+ s[4] + '\x1b[0m')
+print('[✔] can declare style first in chain')
