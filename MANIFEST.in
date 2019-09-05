@@ -1,0 +1,8 @@
+# README, CONTRIBUTING
+include *.rst
+
+# license
+include LICENSE
+
+# img
+include img/*.png
