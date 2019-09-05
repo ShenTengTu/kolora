@@ -9,6 +9,7 @@ Use method chain to make colored text in terminal.
 
 .. image:: img/Kolora_logo.png
 
+
 Description
 ===========
 example :
@@ -26,6 +27,13 @@ example :
 
 .. image:: img/example.png
 
+
+Install
+-------
+Current package is testing version, the distribution is uploaded to Test PyPI.
+.. code-block::
+
+    pip install -i https://test.pypi.org/simple/ kolora
 
 
 Testing
