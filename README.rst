@@ -7,7 +7,7 @@ kolora
 -----------------------------------------------------
 Use method chain to make colored text in terminal.
 
-.. image:: img/Kolora_logo.png
+.. image:: https://github.com/ShenTengTu/kolora/raw/master/img/Kolora_logo.png
 
 
 Description
@@ -25,7 +25,7 @@ example :
 
     print(txt)
 
-.. image:: img/example.png
+.. image:: https://github.com/ShenTengTu/kolora/raw/master/img/example.png
 
 
 Install
