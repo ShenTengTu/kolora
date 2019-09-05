@@ -9,18 +9,30 @@ Use method chain to make colored text in terminal.
 
 .. image:: img/Kolora_logo.png
 
-
+Description
+===========
 example :
 
 .. code-block:: python
 
-  from kolora import Kolora
+    from kolora import Kolora
 
-  txt = Kolora()\
-      ('"kolora teksto"', fg='Maroon', bg="#d7af00")\
-      (' is Esperanto, meaning ', reset=True)\
-      ('"colored text."', fg='Silver', bg="#005fff").text
+    txt = Kolora()\
+        ('"kolora teksto"', fg='Maroon', bg="#d7af00")\
+        (' is Esperanto, meaning ', reset=True)\
+        ('"colored text."', fg='Silver', bg="#005fff").text
 
-  print(txt)
+    print(txt)
 
 .. image:: img/example.png
+
+
+
+Testing
+-------
+Use the command as below:
+
+.. code-block::
+
+    python -m test
+
